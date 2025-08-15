@@ -1,9 +1,5 @@
 streamlit
-pycaret
-pandas
-numpy
-plotly
-python-dotenv
-openai
+openai>=1.0.0
+tiktoken
 
 

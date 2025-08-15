@@ -11,7 +11,7 @@ with st.sidebar:
     st.header("🔐 Klucz API OpenAI")
     api_key_input = st.text_input("Wprowadź swój klucz API:", type="password")
     if api_key_input:
-        openai.api_key = api_key_input
+        st.session_state.api_key = api_key_input
     else:
         st.warning("⚠️ Wprowadź klucz API, aby korzystać z chatbota.")
     st.markdown("---")
@@ -58,7 +58,8 @@ Jesteś ekspertem od Pythona. Oto kod użytkownika:
 Pytanie: {question}
 Odpowiedz jasno i zwięźle.
 """
-    response = openai.ChatCompletion.create(
+    client = openai.OpenAI(api_key=st.session_state.api_key)
+    response = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.5,
@@ -66,7 +67,6 @@ Odpowiedz jasno i zwięźle.
     )
     reply = response.choices[0].message.content
 
-    # Liczenie tokenów
     input_tokens = count_tokens(prompt, model)
     output_tokens = count_tokens(reply, model)
     total_tokens = input_tokens + output_tokens
@@ -79,7 +79,7 @@ Odpowiedz jasno i zwięźle.
 
 # Obsługa zapytania
 if st.button("Wyślij zapytanie", key="send_button"):
-    if not openai.api_key:
+    if "api_key" not in st.session_state or not st.session_state.api_key:
         st.error("❌ Brak klucza API. Wprowadź go w lewym pasku.")
     elif code_input and question:
         answer = ask_openai(code_input, question, model=model_choice)
@@ -89,4 +89,5 @@ if st.button("Wyślij zapytanie", key="send_button"):
     else:
         st.warning("Wpisz kod i pytanie, zanim wyślesz zapytanie.")
         
+
         
