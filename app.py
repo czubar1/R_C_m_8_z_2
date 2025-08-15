@@ -1,11 +1,6 @@
 import streamlit as st
 import openai
-from dotenv import load_dotenv
-import os
 import tiktoken
-
-# Załaduj zmienne środowiskowe
-load_dotenv()
 
 # Inicjalizacja historii
 if "history" not in st.session_state:
@@ -63,8 +58,7 @@ Jesteś ekspertem od Pythona. Oto kod użytkownika:
 Pytanie: {question}
 Odpowiedz jasno i zwięźle.
 """
-    client = openai.OpenAI()
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.5,
